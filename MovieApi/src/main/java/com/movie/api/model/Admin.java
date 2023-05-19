@@ -45,7 +45,7 @@ public class Admin extends AbstractUser implements UserDetails {
 
 	@ManyToMany
 	@JoinTable(name = "AdminRoles", joinColumns = @JoinColumn(name = "admin_Id", referencedColumnName = "adminId"), inverseJoinColumns = @JoinColumn(name = "role_Id", referencedColumnName = "roleId"))
-	private Set<Roles> roles = new HashSet<>();
+	private List<Roles> roles = new ArrayList();
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

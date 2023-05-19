@@ -1,6 +1,8 @@
 package com.movie.api;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ public class MovieApiApplication implements CommandLineRunner {
 	}
 	@Override
 	public void run(String... args) throws Exception {
+	
 		Roles admin=new Roles();
 		Roles manager=new Roles();
 		Roles normal=new Roles();
@@ -49,7 +52,9 @@ public class MovieApiApplication implements CommandLineRunner {
 		normal.setRoleName("ROLE_NORMAL");
 		normal.setRoleId(AppConstant.NORMAL_USER);
 		
-		List<Roles> roles=List.of(admin,manager,normal);
+		
+		
+	    List<Roles> roles=List.of(admin,manager,normal);
 		List<Roles> rolesp= rolesRepo.saveAll(roles);
 		rolesp.forEach(r->System.out.println(r.getRoleName()));
 	}
