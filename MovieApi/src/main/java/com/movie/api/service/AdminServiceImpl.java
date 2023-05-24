@@ -59,7 +59,7 @@ public class AdminServiceImpl implements AdminService{
 	 
 	    AdminDto savedAdminDto = modelMapper.map(savedAdmin, AdminDto.class);
 	    RolesDto adminRoleDto = modelMapper.map(adminRole, RolesDto.class);
-	    
+	    savedAdminDto.getRoles().add(adminRoleDto);
 
 	   
 	    return savedAdminDto;
