@@ -1,6 +1,5 @@
 package com.movie.api.model;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ScreenSeats {
-	@Id 
+
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer screenSeatsId;
 	private String theaterName;
@@ -35,18 +35,16 @@ public class ScreenSeats {
 	private Integer totalSeats;
 	private Double price;
 	private Integer avalSeats;
-	
-	
-	
-	@ManyToOne(cascade =CascadeType.ALL )
+
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "theaterId")
 	private Theater theater;
 
 	@ManyToOne()
 	@JoinColumn(name = "managerId")
 	private Manager manager;
-	
+
 	@OneToMany(mappedBy = "screenSeats")
-	private List<Booking> bookings=new ArrayList<>();
-	
+	private List<Booking> bookings = new ArrayList<>();
+
 }

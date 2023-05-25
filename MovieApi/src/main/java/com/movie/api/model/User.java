@@ -34,24 +34,23 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class User extends AbstractUser implements UserDetails{
+public class User extends AbstractUser implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer userId;
-	
+
 	@OneToMany(mappedBy = "user")
-	private List<Booking> bookings=new ArrayList<>();
-	
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JoinTable(name="UserRoles",
-	joinColumns = @JoinColumn(name="user_Id", referencedColumnName = "userId"),
-	inverseJoinColumns = @JoinColumn(name="role_Id", referencedColumnName = "roleId"))
-	private Set<Roles> roles=new HashSet<>();
+	private List<Booking> bookings = new ArrayList<>();
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "UserRoles", joinColumns = @JoinColumn(name = "user_Id", referencedColumnName = "userId"), inverseJoinColumns = @JoinColumn(name = "role_Id", referencedColumnName = "roleId"))
+	private Set<Roles> roles = new HashSet<>();
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return roles.stream().map((role)->new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
+		return roles.stream().map((role) -> new SimpleGrantedAuthority(role.getRoleName()))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -83,8 +82,5 @@ public class User extends AbstractUser implements UserDetails{
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
-	
-	
-}
 
+}
