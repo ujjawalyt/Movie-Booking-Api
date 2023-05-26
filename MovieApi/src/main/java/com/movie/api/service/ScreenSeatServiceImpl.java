@@ -50,7 +50,6 @@ public class ScreenSeatServiceImpl implements ScreenSeatService {
 		screenSeats.setManager(manager.get());
 
 		ScreenSeats savedScreenSeats = screenSeatsRepo.save(screenSeats);
-
 		ScreenSeats saved = modelMapper.map(screenSeats, ScreenSeats.class);
 
 		return modelMapper.map(saved, ScreenSeatsDto.class);

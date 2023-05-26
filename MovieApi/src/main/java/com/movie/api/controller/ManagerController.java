@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.movie.api.dto.ManagerDto;
 import com.movie.api.dto.ScreenSeatsDto;
+import com.movie.api.dto.ScreenTimeDto;
 import com.movie.api.dto.TheaterDto;
 import com.movie.api.exception.AdminNotFoundException;
 import com.movie.api.exception.ManagerNotFoundException;
 import com.movie.api.exception.RoleNotFoundException;
+import com.movie.api.exception.ScreenTimeNotFoundException;
 import com.movie.api.exception.TheaterNotFoundException;
 import com.movie.api.service.ManagerService;
 import com.movie.api.service.ScreenSeatService;
+import com.movie.api.service.ScreenTimeService;
 import com.movie.api.service.TheaterService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -33,6 +36,9 @@ public class ManagerController {
 
 	@Autowired
 	private ScreenSeatService screenSeatService;
+	
+	@Autowired
+	private ScreenTimeService screenTimeService;
 
 	@PostMapping("admin/{adminId}")
 	public ResponseEntity<ManagerDto> registerNewManagerHandler(@PathVariable("adminId") Integer adminId,
@@ -57,5 +63,17 @@ public class ManagerController {
 		return new ResponseEntity<ScreenSeatsDto>(
 				screenSeatService.addScreenDetails(screenSeatsDto, managerId, theaterId), HttpStatus.CREATED);
 	}
+	
+	
+
+	@PostMapping("screentime/manager/{managerId}/theater/{theaterId}")
+	public ResponseEntity<ScreenTimeDto> registerScreenTimeByManagerHandler(
+			@PathVariable("managerId") Integer managerId, @PathVariable("theaterId") Integer theaterId,
+			@RequestBody ScreenTimeDto screenTimeDto) throws ManagerNotFoundException, TheaterNotFoundException ,ScreenTimeNotFoundException{
+
+		return new ResponseEntity<ScreenTimeDto>(
+				screenTimeService.addScreenTime(screenTimeDto, managerId, theaterId), HttpStatus.CREATED);
+	}
+
 
 }
