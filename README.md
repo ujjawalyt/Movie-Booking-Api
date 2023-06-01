@@ -43,3 +43,10 @@ The following Diagram depicts the flow of our Entity Relation Diagram to simplif
 `https://localhost:8888/index.html`
 
 `http://localhost:8888/swagger-ui.html`
+
+
+###  Authentication
+Authentication is required for certain endpoints. It is implemented using JWT (JSON Web Tokens).
+To access authenticated endpoints, include the JWT token in the Authorization header of the request:
+
+`Authorization: Bearer {token}`
