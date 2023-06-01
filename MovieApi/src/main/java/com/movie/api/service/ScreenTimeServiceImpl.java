@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.movie.api.Enum.ShowTime;
 import com.movie.api.dto.ScreenTimeDto;
 import com.movie.api.exception.ManagerNotFoundException;
 import com.movie.api.exception.ScreenTimeNotFoundException;
@@ -20,7 +21,7 @@ import com.movie.api.repository.ScreenTimeRepo;
 import com.movie.api.repository.TheaterRepo;
 
 @Service
-public class ScreenTimeServiceImpl  implements ScreenTimeService{
+public class ScreenTimeServiceImpl implements ScreenTimeService {
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -30,88 +31,57 @@ public class ScreenTimeServiceImpl  implements ScreenTimeService{
 	private ManagerRepo managerRepo;
 	@Autowired
 	private TheaterRepo theaterRepo;
-	
+
 	@Override
-	public ScreenTimeDto addScreenTime(ScreenTimeDto screenTimeDto, Integer managerId,Integer theaterId) throws
-ManagerNotFoundException ,TheaterNotFoundException, ScreenTimeNotFoundException {
-		
+	public ScreenTimeDto addScreenTime(ScreenTimeDto screenTimeDto, Integer managerId, Integer theaterId)
+			throws ManagerNotFoundException, TheaterNotFoundException, ScreenTimeNotFoundException {
+
 		Optional<Manager> manager = managerRepo.findById(managerId);
-		if(manager.isEmpty()) {
-			throw new ManagerNotFoundException("Manager not found with this manager id"+ managerId);
+		if (manager.isEmpty()) {
+			throw new ManagerNotFoundException("Manager not found with this manager id" + managerId);
 		}
 		Optional<Theater> theater = theaterRepo.findById(theaterId);
 		if (theater.isEmpty()) {
 			throw new TheaterNotFoundException("Theater not found with this theater id" + theaterId);
 		}
 
-		
-		int numberOfScreens = theater.get().getNumberOfScreens();
-		String theaterName = theater.get().getTheaterName();
-		List<ScreenTime> screenTimes = screenTimeRepo.findByTheaterName(theaterName);
-		int currentNumberOfScreens = screenTimes.stream()
-		        .map(ScreenTime::getScreen)
-		        .distinct()
-		        .collect(Collectors.toList())
-		        .size();
+		if (theater.get().getManager().equals(manager.get())) {
 
-		if (currentNumberOfScreens >= numberOfScreens) {
-		    throw new IllegalArgumentException("Number of screens exceeded the limit for the theater: " + theaterName);
+			System.out.println("correct");
+
+			String screenString = screenTimeDto.getScreen();
+			int screenInt = Integer.parseInt(screenString);
+
+			if (screenInt <= theater.get().getNumberOfScreens()) {
+				System.out.println("screen correct");
+
+				ShowTime showtime = screenTimeDto.getShowTime();
+				System.out.println(showtime);
+				Optional<ScreenTime> screenOptional = screenTimeRepo.findByScreenAndShowTime(screenString, showtime);
+				if (screenOptional.isPresent()) {
+					throw new TheaterNotFoundException("Already screenTime set for this show");
+				}
+				ScreenTime screenTime = modelMapper.map(screenTimeDto, ScreenTime.class);
+
+				screenTime.setManager(manager.get());
+				screenTime.setTheater(theater.get());
+				screenTime.setTheaterName(theater.get().getTheaterName());
+				screenTime.setShowTime(showtime);
+				ScreenTime savedScreen = screenTimeRepo.save(screenTime);
+				return modelMapper.map(savedScreen, ScreenTimeDto.class);
+
+			} else {
+				System.out.println("Screen is Exceed ");
+				throw new TheaterNotFoundException("Screen is Exceed ");
+			}
+
+		} else {
+			System.out.println("error");
+			throw new TheaterNotFoundException("this Theater is not assciate with  this manager ");
 		}
 
-		String screen = screenTimeDto.getScreen();
-		String showTime = screenTimeDto.getShowTime();
-
-		boolean isScreenBooked = screenTimes.stream()
-		        .anyMatch(screenTime ->
-		                screenTime.getScreen().equals(screen) && !screenTime.getShowTime().equals(showTime));
-
-		if (isScreenBooked) {
-		    throw new IllegalArgumentException("Screen " + screen + " is already booked at a different show time");
-		}
-		
-		
-	
-		
-//		int numberOfScreens = theater.get().getNumberOfScreens();
-//		String theaterName = theater.get().getTheaterName();
-//		List<ScreenTime> screenTimes = screenTimeRepo.findByTheaterName(theaterName);
-//		int currentNumberOfScreens = screenTimes.size();
-//		if (currentNumberOfScreens >= numberOfScreens) {
-//		    throw new ScreenTimeNotFoundException("Number of screens exceeded the limit for the theater: " + theaterName);
-//		}
 		
 
-		     
-		
-		
-		
-		
-//		
-//		String screen = screenTimeDto.getScreen();
-//		    String showTime = screenTimeDto.getShowTime();
-//		
-//		 Optional<ScreenTime> existingScreenTime = screenTimeRepo.findByScreenAndShowTime(screenTimeDto.getScreen(), screenTimeDto.getShowTime());
-//		    if (existingScreenTime.isPresent()) {
-//		        throw new ScreenTimeNotFoundException("Screen and time combination already exists");
-//		    }
-//		    
-//		    
-		
-		
-		
-		
-
-		
-	ScreenTime screenTime = modelMapper.map(screenTimeDto,ScreenTime.class );
-	screenTime.setManager(manager.get());
-	screenTime.setTheater(theater.get());
-	screenTime.setTheaterName(theater.get().getTheaterName());
-	
-	ScreenTime savedSceenTime = screenTimeRepo.save(screenTime);
-   return modelMapper.map(savedSceenTime, ScreenTimeDto.class);
-		    
 	}
-	
-	
-	
+
 }

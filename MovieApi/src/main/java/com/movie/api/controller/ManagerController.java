@@ -55,14 +55,6 @@ public class ManagerController {
 		return new ResponseEntity<TheaterDto>(theaterService.addTheater(theaterDto, managerId), HttpStatus.CREATED);
 	}
 
-	@PostMapping("manager/{managerId}/theater/{theaterId}")
-	public ResponseEntity<ScreenSeatsDto> registerScreenSeatsByManagerHandler(
-			@PathVariable("managerId") Integer managerId, @PathVariable("theaterId") Integer theaterId,
-			@RequestBody ScreenSeatsDto screenSeatsDto) throws ManagerNotFoundException, TheaterNotFoundException {
-
-		return new ResponseEntity<ScreenSeatsDto>(
-				screenSeatService.addScreenDetails(screenSeatsDto, managerId, theaterId), HttpStatus.CREATED);
-	}
 	
 	
 
@@ -75,5 +67,15 @@ public class ManagerController {
 				screenTimeService.addScreenTime(screenTimeDto, managerId, theaterId), HttpStatus.CREATED);
 	}
 
+	
+	@PostMapping("manager/{managerId}/theater/{theaterId}/screenTime/{screenTimeId}")
+	public ResponseEntity<ScreenSeatsDto> registerScreenSeatsByManagerHandler(
+			@PathVariable("managerId") Integer managerId, @PathVariable("theaterId") Integer theaterId,
+			@RequestBody ScreenSeatsDto screenSeatsDto, @PathVariable("screenTimeId") Integer screenTimeId)
+			throws ManagerNotFoundException, TheaterNotFoundException,ScreenTimeNotFoundException {
+		return new ResponseEntity<ScreenSeatsDto>(
+				screenSeatService.addSeatsToScreen(screenSeatsDto, managerId, theaterId, screenTimeId),
+				HttpStatus.CREATED);
+	}
 
 }

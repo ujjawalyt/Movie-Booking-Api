@@ -1,12 +1,16 @@
 package com.movie.api.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.movie.api.Enum.ShowTime;
+import com.movie.api.Enum.ShowTimeConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +31,8 @@ public class ScreenTime {
 private Integer screenTimeId;
 private String theaterName;
 private String screen;
-private String showTime;
+@Convert(converter = ShowTimeConverter.class) 
+private ShowTime showTime;
 private String ShowName;
 
 @ManyToOne()

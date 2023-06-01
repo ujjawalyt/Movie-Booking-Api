@@ -2,6 +2,8 @@ package com.movie.api.dto;
 
 
 
+import com.movie.api.Enum.ShowTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -19,6 +21,6 @@ public class ScreenTimeDto {
 	private Integer screenTimeId;
 	private String theaterName;
 	private String screen;
-	private String showTime;
+	private ShowTime showTime;
 	private String ShowName;
 }
