@@ -27,13 +27,13 @@ import lombok.Setter;
 public class Movie {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private String movieId;
+	private Integer movieId;
 	private String theaterName;
 	private String screen;
-	private Integer shows;
+	private String shows;
 	private String movieName;
-	private Date startdate;
-	private Date endDate;
+	private String startdate;
+	private String endDate;
 	
 	@ManyToOne
 	@JoinColumn(name = "managerId")

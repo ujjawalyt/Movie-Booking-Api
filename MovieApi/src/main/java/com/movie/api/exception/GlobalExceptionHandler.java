@@ -97,4 +97,16 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
 		
 	}
+	
+	@ExceptionHandler(ScreenSeatNotFoundException.class)
+	public ResponseEntity<MyErrorDetails> mySSNFExceptionHandler(ScreenSeatNotFoundException ssnf ,WebRequest wr){
+		
+		MyErrorDetails error = new MyErrorDetails();
+		error.setTimestamp(LocalDate.now());
+		error.setMessage(ssnf.getMessage());
+		error.setDescription(wr.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
+		
+	}
 }

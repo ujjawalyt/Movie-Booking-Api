@@ -1,6 +1,6 @@
 package com.movie.api.dto;
 
-import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -14,11 +14,11 @@ import lombok.Setter;
 @Getter
 public class MovieDto {
 
-	private String movieId;
+	private Integer movieId;
 	private String theaterName;
 	private String screen;
-	private Integer shows;
+	private String shows;
 	private String movieName;
-	private Date startdate;
-	private Date endDate;
+	private String startdate;
+	private String endDate;
 }
