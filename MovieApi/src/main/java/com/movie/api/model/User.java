@@ -41,6 +41,9 @@ public class User extends AbstractUser implements UserDetails {
 
 	@OneToMany(mappedBy = "user")
 	private List<Booking> bookings = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user")
+	List<UserWallet> wallets;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "UserRoles", joinColumns = @JoinColumn(name = "user_Id", referencedColumnName = "userId"), inverseJoinColumns = @JoinColumn(name = "role_Id", referencedColumnName = "roleId"))

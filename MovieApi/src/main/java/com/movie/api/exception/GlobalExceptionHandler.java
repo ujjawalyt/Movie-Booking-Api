@@ -109,4 +109,28 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
 		
 	}
+	
+	@ExceptionHandler(WalletAlreadyExistsException.class)
+	public ResponseEntity<MyErrorDetails> myWAEExceptionHandler(WalletAlreadyExistsException waee ,WebRequest wr){
+		
+		MyErrorDetails error = new MyErrorDetails();
+		error.setTimestamp(LocalDate.now());
+		error.setMessage(waee.getMessage());
+		error.setDescription(wr.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
+		
+	}
+	
+	@ExceptionHandler(WalletNotFoundException.class)
+	public ResponseEntity<MyErrorDetails> myWNFExceptionHandler(WalletNotFoundException waee ,WebRequest wr){
+		
+		MyErrorDetails error = new MyErrorDetails();
+		error.setTimestamp(LocalDate.now());
+		error.setMessage(waee.getMessage());
+		error.setDescription(wr.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
+		
+	}
 }
