@@ -27,7 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/webjars/**",
 			"/admin/**",
 			"/manager/**",
-			"/users/**"
+			"/users/**",
+			"/booking/**"
 			
 			
 			

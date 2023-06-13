@@ -40,6 +40,9 @@ public class Booking {
 	private String category;
 	
 	private Integer noOfSeats;
+	private Double bookingAmount;
+
+	private String bookingStatus;
 	
 	
 	@ManyToOne(cascade = CascadeType.ALL )

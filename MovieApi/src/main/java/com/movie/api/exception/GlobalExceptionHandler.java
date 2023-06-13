@@ -133,4 +133,29 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
 		
 	}
+	
+	@ExceptionHandler(BookingException.class)
+	public ResponseEntity<MyErrorDetails> myBExceptionHandler(BookingException be ,WebRequest wr){
+		
+		MyErrorDetails error = new MyErrorDetails();
+		error.setTimestamp(LocalDate.now());
+		error.setMessage(be.getMessage());
+		error.setDescription(wr.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
+		
+	}
+	
+	
+	@ExceptionHandler(MovieNotFoundException.class)
+	public ResponseEntity<MyErrorDetails> myMNFExceptionHandler(MovieNotFoundException be ,WebRequest wr){
+		
+		MyErrorDetails error = new MyErrorDetails();
+		error.setTimestamp(LocalDate.now());
+		error.setMessage(be.getMessage());
+		error.setDescription(wr.getDescription(false));
+		
+		return new ResponseEntity<MyErrorDetails>(error,HttpStatus.BAD_REQUEST);
+		
+	}
 }
