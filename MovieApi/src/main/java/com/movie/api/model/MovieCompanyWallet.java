@@ -41,9 +41,15 @@ public class MovieCompanyWallet {
 	@JoinColumn(name ="managerId")
 	private Manager manager;
 	
-	@OneToMany(mappedBy = "senderWallet")
-	private List<Transactions> senderWallet;
+//	@OneToMany(mappedBy = "senderWallet")
+//	private List<Transactions> senderWallet;
 	
 	@OneToMany(mappedBy = "receiverWallet")
 	private List<Transactions> receiverWallet;
+	
+
+
+  
+
+	
 }

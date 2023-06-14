@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.movie.api.dto.BookingDto;
@@ -30,8 +31,7 @@ import com.movie.api.repository.UserRepo;
 import com.movie.api.repository.UserWalletRepo;
 
 @Service
-public class BookingServiceImpl  implements BookingService{
-
+public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	private MovieRepo movieRepo;
@@ -41,7 +41,7 @@ public class BookingServiceImpl  implements BookingService{
 
 	@Autowired
 	private UserRepo userRepo;
-	@Autowired 
+	@Autowired
 	private UserWalletRepo userWalletRepo;
 	@Autowired
 	private CompanyWalletRepo companyWalletRepo;
@@ -51,15 +51,11 @@ public class BookingServiceImpl  implements BookingService{
 	private BookingRepo bookingRepo;
 	@Autowired
 	TransactionsRepo transactionsRepo;
-	
-	
-	
-	
+
 	@Override
 	public BookingDto bookYourMovie(BookingDto bookingDto, Integer screenSeatId, Integer movieId, Integer userId)
-			throws BookingException, UserNotFoundException ,
-			MovieNotFoundException,ScreenSeatNotFoundException{
-		
+			throws BookingException, UserNotFoundException, MovieNotFoundException, ScreenSeatNotFoundException {
+
 		Optional<User> isUserPresent = userRepo.findById(userId);
 		if (isUserPresent.isEmpty()) {
 			throw new UserNotFoundException("User is not Present");
@@ -102,56 +98,234 @@ public class BookingServiceImpl  implements BookingService{
 		return modelMapper.map(saved, BookingDto.class);
 	}
 
+//	@Override
+//	public TransactionDto payBookingAmount(Integer bookingId, Integer userWalletId, Integer adminWalletId,
+//	                                       TransactionDto transactionDto) throws BookingException, UserNotFoundException, AdminNotFoundException {
+//
+//	    Booking booking = bookingRepo.findById(bookingId)
+//	            .orElseThrow(() -> new BookingException("Wrong Booking ID entered."));
+//
+//	    UserWallet userWallet = userWalletRepo.findById(userWalletId)
+//	            .orElseThrow(() -> new UserNotFoundException("Wrong information of user"));
+//
+//	    MovieCompanyWallet companyWallet = companyWalletRepo.findById(adminWalletId)
+//	            .orElseThrow(() -> new AdminNotFoundException("Wrong information of admin"));
+//
+//	    double bookingAmount = booking.getBookingAmount();
+//	    int noOfSeats = booking.getNoOfSeats();
+//
+//	    if (!booking.getBookingStatus().equalsIgnoreCase("Pending")) {
+//	        throw new BookingException("Invalid booking status.");
+//	    }
+//
+//	    if (userWallet.getBalance() < bookingAmount) {
+//	        throw new BookingException("Insufficient balance in user's wallet.");
+//	    }
+//
+//	    double amount = userWallet.getBalance() - bookingAmount;
+//	    companyWallet.setBalance(companyWallet.getBalance() + amount);
+//	    userWallet.setBalance(userWallet.getBalance() - amount);
+//	    booking.setBookingStatus("Booked!!!");
+//	    ScreenSeats screenSeats = booking.getScreenSeats();
+//	    int updatedSeats = screenSeats.getAvalSeats() - noOfSeats;
+//	    screenSeats.setAvalSeats(updatedSeats);
+//	    screenSeatsRepo.save(screenSeats);
+//	    bookingRepo.save(booking);
+//	    companyWalletRepo.save(companyWallet);
+//	    userWalletRepo.save(userWallet);
+//
+//	    Transactions transaction = modelMapper.map(transactionDto, Transactions.class);
+//	    transaction.setSenderWallet(userWallet);
+//	    transaction.setReceiverWallet(companyWallet);
+//	    transaction.setTimestamp(LocalDateTime.now());
+//	    transaction.setAmount(bookingAmount);
+//	    
+//	    Transactions updateTransaction = transactionsRepo.save(transaction);
+//
+//	    TransactionDto updatedTransactionDto = modelMapper.map(updateTransaction, TransactionDto.class);
+//	    updatedTransactionDto.setSender_wallet_id(userWalletId);
+//	    updatedTransactionDto.setReceiver_wallet_id(adminWalletId);
+//	    return updatedTransactionDto;
+//	    
+//	  
+//	}
 
+//	@Override
+//	public TransactionDto payBookingAmount(Integer bookingId, Integer userWalletId, Integer adminWalletId,
+//	                                      TransactionDto transactionDto) throws BookingException, UserNotFoundException, AdminNotFoundException {
+//
+//	    Booking booking = bookingRepo.findById(bookingId)
+//	            .orElseThrow(() -> new BookingException("Incorrect Booking ID entered."));
+//
+//	    UserWallet userWallet = userWalletRepo.findById(userWalletId)
+//	            .orElseThrow(() -> new UserNotFoundException("Incorrect user information."));
+//
+//	    MovieCompanyWallet companyWallet = companyWalletRepo.findById(adminWalletId)
+//	            .orElseThrow(() -> new AdminNotFoundException("Incorrect admin information."));
+//
+//	    double bookingAmount = booking.getBookingAmount();
+//	    int noOfSeats = booking.getNoOfSeats();
+//
+//	    if (bookingAmount <= 0) {
+//	        throw new UserNotFoundException("Invalid amount to send.");
+//	    }
+//
+//	    if (!booking.getBookingStatus().equalsIgnoreCase("Pending")) {
+//	        throw new BookingException("Invalid booking status.");
+//	    }
+//
+//	    if (userWallet.getBalance() < bookingAmount) {
+//	        throw new BookingException("Insufficient balance in user's wallet.");
+//	    }
+//
+//	    Transactions transaction = modelMapper.map(transactionDto, Transactions.class);
+//
+//	    double amount = userWallet.getBalance() - bookingAmount;
+//	    companyWallet.setBalance(companyWallet.getBalance() + bookingAmount);
+//	    userWallet.setBalance(amount);
+//	    booking.setBookingStatus("Booked!!!");
+//	    ScreenSeats screenSeats = booking.getScreenSeats();
+//	    int updatedSeats = screenSeats.getAvalSeats() - noOfSeats;
+//	    screenSeats.setAvalSeats(updatedSeats);
+//	    
+//	    transaction.setSenderWallet(userWallet);
+//	    transaction.setReceiverWallet(companyWallet);
+//	    transaction.setTimestamp(LocalDateTime.now());
+//	    transaction.setAmount(bookingAmount);
+//
+//	    screenSeatsRepo.save(screenSeats);
+//	    bookingRepo.save(booking);
+//	    companyWalletRepo.save(companyWallet);
+//	    userWalletRepo.save(userWallet);
+//
+//	    Transactions updateTransaction = transactionsRepo.save(transaction);
+//
+//	    TransactionDto updatedTransactionDto = modelMapper.map(updateTransaction, TransactionDto.class);
+//	    updatedTransactionDto.setSenderName(userWallet.getUser().getFirstName());
+//	    updatedTransactionDto.setReceiverName(companyWallet.getManager().getFirstName());
+//	    return updatedTransactionDto;
+//	}
 
 	@Override
 	public TransactionDto payBookingAmount(Integer bookingId, Integer userWalletId, Integer adminWalletId,
-	                                       TransactionDto transactionDto) throws BookingException, UserNotFoundException, AdminNotFoundException {
+	                                      TransactionDto transactionDto) throws BookingException, UserNotFoundException, AdminNotFoundException {
 
-	    Booking booking = bookingRepo.findById(bookingId)
-	            .orElseThrow(() -> new BookingException("Wrong Booking ID entered."));
+		  Booking booking = bookingRepo.findById(bookingId)
+		            .orElseThrow(() -> new BookingException("Wrong Booking ID entered."));
 
-	    UserWallet userWallet = userWalletRepo.findById(userWalletId)
-	            .orElseThrow(() -> new UserNotFoundException("Wrong information of user"));
+		    UserWallet userWallet = userWalletRepo.findById(userWalletId)
+		            .orElseThrow(() -> new UserNotFoundException("Wrong information of user"));
 
-	    MovieCompanyWallet companyWallet = companyWalletRepo.findById(adminWalletId)
-	            .orElseThrow(() -> new AdminNotFoundException("Wrong information of admin"));
+		    MovieCompanyWallet companyWallet = companyWalletRepo.findById(adminWalletId)
+		            .orElseThrow(() -> new AdminNotFoundException("Wrong information of admin"));
 
-	    double bookingAmount = booking.getBookingAmount();
-	    int noOfSeats = booking.getNoOfSeats();
+		    double bookingAmount = booking.getBookingAmount();
+		    int noOfSeats = booking.getNoOfSeats();
+		    
+		    if (bookingAmount <= 0) {
+		        throw new UserNotFoundException("Invalid amount to send");
+		    }
 
-	    if (!booking.getBookingStatus().equalsIgnoreCase("Pending")) {
-	        throw new BookingException("Invalid booking status.");
-	    }
+		    if (!booking.getBookingStatus().equalsIgnoreCase("Pending")) {
+		        throw new BookingException("Invalid booking status.");
+		    }
 
-	    if (userWallet.getBalance() < bookingAmount) {
-	        throw new BookingException("Insufficient balance in user's wallet.");
-	    }
+		    if (userWallet.getBalance() < bookingAmount) {
+		        throw new BookingException("Insufficient balance in the user's wallet.");
+		    }
 
-	    double amount = userWallet.getBalance() - bookingAmount;
-	    companyWallet.setBalance(companyWallet.getBalance() + amount);
-	    userWallet.setBalance(userWallet.getBalance() - amount);
-	    booking.setBookingStatus("Booked!!!");
-	    ScreenSeats screenSeats = booking.getScreenSeats();
-	    int updatedSeats = screenSeats.getAvalSeats() - noOfSeats;
-	    screenSeats.setAvalSeats(updatedSeats);
-	    screenSeatsRepo.save(screenSeats);
-	    bookingRepo.save(booking);
-	    companyWalletRepo.save(companyWallet);
-	    userWalletRepo.save(userWallet);
+		    // Update user wallet balance
+		    double updatedUserWalletBalance = userWallet.getBalance() - bookingAmount;
+		    userWallet.setBalance(updatedUserWalletBalance);
 
-	    Transactions transaction = modelMapper.map(transactionDto, Transactions.class);
-	    transaction.setSenderWallet(userWallet);
-	    transaction.setReceiverWallet(companyWallet);
-	    transaction.setTimestamp(LocalDateTime.now());
-	    transaction.setAmount(bookingAmount);
-	    Transactions updateTransaction = transactionsRepo.save(transaction);
+		    // Update company wallet balance
+		    double updatedCompanyWalletBalance = companyWallet.getBalance() + bookingAmount;
+		    companyWallet.setBalance(updatedCompanyWalletBalance);
 
-	    return modelMapper.map(updateTransaction, TransactionDto.class);
+		    // Update booking status
+		    booking.setBookingStatus("Booked!!!");
+
+		    // Update screen seats
+		    ScreenSeats screenSeats = booking.getScreenSeats();
+		    int updatedSeats = screenSeats.getAvalSeats() - noOfSeats;
+		    screenSeats.setAvalSeats(updatedSeats);
+
+		    // Create and set transaction details
+		    Transactions transaction = new Transactions();
+		    transaction.setAmount(bookingAmount);
+		    transaction.setTimestamp(LocalDateTime.now());
+		    transaction.setTransactionType(transactionDto.getTransactionType());
+		    transaction.setSenderWallet(userWallet);
+		    transaction.setReceiverWallet(companyWallet);
+
+		    // Save the entities and transaction
+		    screenSeatsRepo.save(screenSeats);
+		    bookingRepo.save(booking);
+		    companyWalletRepo.save(companyWallet);
+		    userWalletRepo.save(userWallet);
+		    Transactions updatedTransaction = transactionsRepo.save(transaction);
+
+		    // Create and return the updated TransactionDto
+		    TransactionDto updatedTransactionDto = new TransactionDto();
+		    updatedTransactionDto.setTransactionId(updatedTransaction.getTransactionId());
+		    updatedTransactionDto.setAmount(updatedTransaction.getAmount());
+		    updatedTransactionDto.setTimestamp(updatedTransaction.getTimestamp());
+		    updatedTransactionDto.setTransactionType(updatedTransaction.getTransactionType());
+		   
+		    updatedTransactionDto.setSenderName(userWallet.getUser().getFirstName());
+		    updatedTransactionDto.setReceiverName(companyWallet.getManager().getFirstName());
+
+		    return updatedTransactionDto;
 	}
 
-
-	
-	
-	
+//	public TransactionDto payBookingAmount(Integer bookingId, Integer userWalletId, Integer adminWalletId,
+//			TransactionDto transactionDto) throws BookingException, UserNotFoundException, AdminNotFoundException {
+//		Booking booking = bookingRepo.findById(bookingId)
+//				.orElseThrow(() -> new BookingException("Wrong Booking ID entered."));
+//
+//		UserWallet userWallet = userWalletRepo.findById(userWalletId)
+//				.orElseThrow(() -> new UserNotFoundException("Wrong information of user"));
+//
+//		MovieCompanyWallet companyWallet = companyWalletRepo.findById(adminWalletId)
+//				.orElseThrow(() -> new AdminNotFoundException("Wrong information of admin"));
+//
+//		 double bookingAmount = booking.getBookingAmount();
+//		    int noOfSeats = booking.getNoOfSeats();
+//		    
+//		    if (bookingAmount <= 0) {
+//		        throw new UserNotFoundException("Invalid amount to send");
+//		    }
+//
+//		    if (!booking.getBookingStatus().equalsIgnoreCase("Pending")) {
+//		        throw new BookingException("Invalid booking status.");
+//		    }
+//
+//		    if (userWallet.getBalance() < bookingAmount) {
+//		        throw new BookingException("Insufficient balance in the user's wallet.");
+//		    }
+//		
+//		
+//		
+//// Perform necessary validations and business logic
+//
+//		Transactions transaction = new Transactions();
+//		transaction.setAmount(booking.getBookingAmount());
+//		transaction.setTimestamp(LocalDateTime.now());
+//		transaction.setTransactionType(transactionDto.getTransactionType());
+//		transaction.setSenderWallet(userWallet);
+//		transaction.setReceiverWallet(companyWallet);
+//
+//// Save the transaction and update wallet balances
+//
+//		userWalletRepo.save(userWallet);
+//		companyWalletRepo.save(companyWallet);
+//
+//		Transactions savedTransaction = transactionsRepo.save(transaction);
+//
+//		TransactionDto savedTransactionDto = new TransactionDto();
+//// Map savedTransaction to savedTransactionDto
+//
+//		return savedTransactionDto;
+//
+//	}
 }

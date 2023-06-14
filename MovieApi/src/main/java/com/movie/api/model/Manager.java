@@ -52,6 +52,10 @@ public class Manager extends AbstractUser  implements UserDetails{
 	@OneToMany(mappedBy = "manager",cascade =CascadeType.ALL )
 	List<Movie>  movie=new ArrayList<>();
 	
+//	
+	@OneToMany(mappedBy = "manager",cascade = CascadeType.ALL)
+	List<MovieCompanyWallet> wallets;
+	
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "adminId")

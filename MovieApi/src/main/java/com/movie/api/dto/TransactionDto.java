@@ -14,8 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TransactionDto {
 
+	private Integer transactionId;
 	private Double amount;
-	private UserWalletsDto1  senderWallet;
-	private MovieCompanyWalletDto receiverWallet;
-	private LocalDateTime datetime;
+	private LocalDateTime timestamp;
+	private String transactionType;
+	private String senderName;
+	private String receiverName;
 }

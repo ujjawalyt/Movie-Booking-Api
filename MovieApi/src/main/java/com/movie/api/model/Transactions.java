@@ -38,11 +38,17 @@ public class Transactions {
 	@Column(name = "transaction_type")
     private String transactionType;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="sender_wallet_id")
-	private UserWallet  senderWallet;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="receiver_wallet_id")
+	
+
+	
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "sender_wallet_id")
+	private UserWallet senderWallet;
+
+	@ManyToOne(cascade = CascadeType.ALL, optional = true)
+	@JoinColumn(name = "receiver_wallet_id")
 	private MovieCompanyWallet receiverWallet;
+	
+	
 }

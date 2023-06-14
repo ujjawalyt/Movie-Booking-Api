@@ -42,7 +42,7 @@ public class User extends AbstractUser implements UserDetails {
 	@OneToMany(mappedBy = "user")
 	private List<Booking> bookings = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 	List<UserWallet> wallets;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

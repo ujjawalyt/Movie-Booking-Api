@@ -45,6 +45,8 @@ public class UserWallet {
 	@OneToMany(mappedBy = "senderWallet")
 	private List<Transactions> senderWallet;
 	
-	@OneToMany(mappedBy = "receiverWallet")
-	private List<Transactions> receiverWallet;
+//	@OneToMany(mappedBy = "receiverWallet")
+//	private List<Transactions> receiverWallet;
+
+	 
 }
